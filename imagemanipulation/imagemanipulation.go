@@ -10,17 +10,18 @@ import (
 	"github.com/nfnt/resize"
 )
 
-func Manipulate() {
-	f, err := os.Open("./avatars/arun.jpg")
-	if err != nil {
-		log.Fatalln("Failed to read the file")
-	}
-	defer f.Close()
+func Manipulate(img *image.RGBA) {
+	// f, err := os.Open("./avatars/arun.jpg")
+	// if err != nil {
+	// 	log.Fatalln("Failed to read the file")
+	// }
+	// defer f.Close()
 
-	img, err := jpeg.Decode(f)
-	if err != nil {
-		log.Fatalln("Failed to decode the file")
-	}
+	// img, err := jpeg.Decode(f)
+	// if err != nil {
+	// 	log.Fatalln("Failed to decode the file")
+	// }
+	// bounds := img.Bounds()
 	bounds := img.Bounds()
 
 	grayImage := image.NewGray(bounds)
@@ -32,9 +33,9 @@ func Manipulate() {
 			grayImage.Set(x, y, newPixel)
 		}
 	}
-	resizedImage := resize.Thumbnail(100, 100, grayImage, resize.Lanczos3)
+	resizedImage := resize.Thumbnail(1920, 1080, grayImage, resize.Lanczos3)
 
-	f, err = os.Create("resized-gray-arun.jpg")
+	f, err := os.Create("grey-collage.jpg")
 	if err != nil {
 		log.Fatalln("Failed to create the gray image")
 	}

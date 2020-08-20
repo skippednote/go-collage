@@ -11,6 +11,8 @@ import (
 	"sync"
 )
 
+var images []string
+
 func getHTML() []byte {
 	res, err := http.Get("https://www.axelerant.com/about")
 	if err != nil {
@@ -30,7 +32,7 @@ func getAvatars(html []byte) []string {
 	var re = regexp.MustCompile(`<div class="emp-avatar">\s+<img src="(.+jpg)\?.+" width="300"`)
 
 	reResult := re.FindAllSubmatch(html, 200)
-	avatars := make([]string, len(reResult))
+	var avatars []string
 
 	for _, v := range reResult {
 		avatars = append(avatars, string(v[1]))
@@ -69,6 +71,7 @@ func downloadImage(image string, wg *sync.WaitGroup) {
 
 	log.Printf("Downloading the file: %s", filename)
 	path := filepath.Join(".", "avatars", filename)
+	images = append(images, path)
 	err = ioutil.WriteFile(path, imageByte, 0766)
 	if err != nil {
 		log.Println("Failed to write the image to disk", err.Error(), image)
@@ -78,17 +81,16 @@ func downloadImage(image string, wg *sync.WaitGroup) {
 func downloadImages(avatars []string) {
 	var wg sync.WaitGroup
 	for _, image := range avatars {
-		if len(image) > 0 {
-			wg.Add(1)
-			go downloadImage(image, &wg)
-		}
+		wg.Add(1)
+		go downloadImage(image, &wg)
 	}
 	wg.Wait()
 }
 
-func DownloadAvatars() {
+func DownloadAvatars() []string {
 	html := getHTML()
 	avatars := getAvatars(html)
 	downloadsDirectory()
 	downloadImages(avatars)
+	return images
 }
