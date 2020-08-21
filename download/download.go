@@ -1,96 +1,106 @@
 package download
 
 import (
+	"fmt"
+	"image"
+	"image/jpeg"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
 	"sync"
 )
 
-var images []string
+type PictureData struct {
+	Path string
+	Data image.Image
+}
 
-func getHTML() []byte {
-	res, err := http.Get("https://www.axelerant.com/about")
+var pictures []PictureData
+
+func getHTML(url string) ([]byte, error) {
+	res, err := http.Get(url)
 	if err != nil {
-		log.Fatalln("Failed to get the about page.", err.Error())
+		return nil, fmt.Errorf("Failed to get the about page. %s", err.Error())
 	}
 
 	defer res.Body.Close()
 	html, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		log.Fatalln("Failed to read the response body.", err.Error())
+		return nil, fmt.Errorf("Failed to read the response body. %s", err.Error())
 	}
 
-	return html
+	return html, nil
 }
 
-func getAvatars(html []byte) []string {
-	var re = regexp.MustCompile(`<div class="emp-avatar">\s+<img src="(.+jpg)\?.+" width="300"`)
+func getPictureURLs(regex string, html []byte) ([]string, error) {
+	var re, err = regexp.Compile(regex)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to compile the given regexp. %s", err.Error())
+	}
 
 	reResult := re.FindAllSubmatch(html, 200)
-	var avatars []string
+	var pictureURLs []string
 
 	for _, v := range reResult {
-		avatars = append(avatars, string(v[1]))
+		pictureURLs = append(pictureURLs, string(v[1]))
 	}
 
-	return avatars
-}
-
-func downloadsDirectory() {
-	err := os.RemoveAll("avatars")
-	if err != nil {
-		log.Fatalln("Failed to delete the avatars directory")
-	}
-	err = os.Mkdir("avatars", 0766)
-	if err != nil {
-		log.Fatalln("Failed to create the avatars directory")
-	}
+	return pictureURLs, nil
 }
 
 func downloadImage(image string, wg *sync.WaitGroup) {
 	defer wg.Done()
 	s := strings.Split(image, "/")
 	filename := strings.ToLower(s[len(s)-1])
+	path := filepath.Join(".", "avatars", filename)
 
 	baseURL := "https://www.axelerant.com"
 	res, err := http.Get(baseURL + image)
 	if err != nil {
-		log.Println("Failed to fetch the image")
+		log.Printf("Failed to fetch the image. %s", err.Error())
 	}
-
 	defer res.Body.Close()
-	imageByte, err := ioutil.ReadAll(res.Body)
+
+	img, err := jpeg.Decode(res.Body)
 	if err != nil {
-		log.Println("Failed to read the response body")
+		log.Printf("Failed to decode the image. %s", err.Error())
 	}
 
 	log.Printf("Downloading the file: %s", filename)
-	path := filepath.Join(".", "avatars", filename)
-	images = append(images, path)
-	err = ioutil.WriteFile(path, imageByte, 0766)
-	if err != nil {
-		log.Println("Failed to write the image to disk", err.Error(), image)
-	}
+	pictures = append(pictures, PictureData{
+		Path: path,
+		Data: img,
+	})
 }
 
-func downloadImages(avatars []string) {
+func downloadImages(avatars []string) error {
 	var wg sync.WaitGroup
 	for _, image := range avatars {
 		wg.Add(1)
 		go downloadImage(image, &wg)
 	}
 	wg.Wait()
+	return nil
 }
 
-func DownloadAvatars() []string {
-	html := getHTML()
-	avatars := getAvatars(html)
-	downloadsDirectory()
-	downloadImages(avatars)
-	return images
+func GetPictures(url string, regex string) ([]PictureData, error) {
+	html, err := getHTML(url)
+	if err != nil {
+		return nil, err
+	}
+
+	pictureURLs, err := getPictureURLs(regex, html)
+	if err != nil {
+		return nil, err
+	}
+
+	err = downloadImages(pictureURLs)
+	if err != nil {
+		return nil, err
+	}
+
+	return pictures, nil
 }
