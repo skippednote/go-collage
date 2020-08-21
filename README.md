@@ -7,3 +7,4 @@
 - [x] Refactor
 - [ ] Add support to run as a http service
 - [ ] Deploy
+- [ ] Support parameters for: Grayscale/Color and Image width size
