@@ -18,12 +18,15 @@ import (
 func main() {
 	defer profile.Start().Stop()
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		query := r.URL.Query()
+		gray := query.Get("gray")
+		width := query.Get("width")
 		pictures, err := download.GetPictures("https://www.axelerant.com/about", `<div class="emp-avatar">\s+<img src="(.+jpg)\?.+" width="300"`)
 		if err != nil {
 			fmt.Println("Failed to download", err)
 		}
 		collage := drawimage.Drawimage(pictures)
-		manipulatedCollage := imagemanipulation.Manipulate(collage)
+		manipulatedCollage, err := imagemanipulation.Manipulate(collage, gray, width)
 		buf := &bytes.Buffer{}
 		jpeg.Encode(buf, manipulatedCollage, nil)
 		w.Write(buf.Bytes())

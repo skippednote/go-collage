@@ -2,7 +2,6 @@ package handler
 
 import (
 	"bytes"
-	"fmt"
 	"image/jpeg"
 	"net/http"
 
@@ -12,14 +11,29 @@ import (
 )
 
 func Handler(w http.ResponseWriter, r *http.Request) {
+	query := r.URL.Query()
+	gray := query.Get("gray")
+	width := query.Get("width")
+
 	pictures, err := download.GetPictures("https://www.axelerant.com/about", `<div class="emp-avatar">\s+<img src="(.+jpg)\?.+" width="300"`)
 	if err != nil {
-		fmt.Println("Failed to download", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
+
 	collage := drawimage.Drawimage(pictures)
-	manipulatedCollage := imagemanipulation.Manipulate(collage)
+	manipulatedCollage, err := imagemanipulation.Manipulate(collage, gray, width)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	buf := &bytes.Buffer{}
-	jpeg.Encode(buf, manipulatedCollage, nil)
+	err = jpeg.Encode(buf, manipulatedCollage, nil)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
 	w.Header().Add("cache-control", "max-age=3600, public")
 	w.Write(buf.Bytes())

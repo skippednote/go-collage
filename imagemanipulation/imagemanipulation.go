@@ -3,22 +3,34 @@ package imagemanipulation
 import (
 	"image"
 	"image/color"
+	"strconv"
 
 	"github.com/nfnt/resize"
 )
 
-func Manipulate(collage *image.RGBA) image.Image {
+func Manipulate(collage *image.RGBA, gray, width string) (image.Image, error) {
 	resizedCollage := resize.Thumbnail(1920, 1080, collage, resize.Lanczos3)
-	bounds := resizedCollage.Bounds()
-	grayCollage := image.NewGray(bounds)
-
-	for y := 0; y < bounds.Max.Y; y++ {
-		for x := 0; x < bounds.Max.X; x++ {
-			oldPixel := resizedCollage.At(x, y)
-			newPixel := color.GrayModel.Convert(oldPixel)
-			grayCollage.Set(x, y, newPixel)
+	if len(width) > 0 {
+		width, err := strconv.ParseUint(width, 10, 32)
+		if err != nil {
+			return nil, err
 		}
+		resizedCollage = resize.Thumbnail(uint(width), 1080, collage, resize.Lanczos3)
 	}
 
-	return grayCollage
+	if len(gray) > 0 {
+		bounds := resizedCollage.Bounds()
+		grayCollage := image.NewGray(bounds)
+
+		for y := 0; y < bounds.Max.Y; y++ {
+			for x := 0; x < bounds.Max.X; x++ {
+				oldPixel := resizedCollage.At(x, y)
+				newPixel := color.GrayModel.Convert(oldPixel)
+				grayCollage.Set(x, y, newPixel)
+			}
+		}
+		return grayCollage, nil
+	}
+
+	return resizedCollage, nil
 }

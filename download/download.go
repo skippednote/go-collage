@@ -67,12 +67,11 @@ func downloadImage(image string, pictures *[]PictureData, wg *sync.WaitGroup) {
 		log.Printf("Failed to decode the image. %s", err.Error())
 	}
 
-	log.Printf("Downloading the file: %s", filename)
+	// log.Printf("Downloading the file: %s", filename)
 	*pictures = append(*pictures, PictureData{
 		Path: path,
 		Data: img,
 	})
-	fmt.Println(pictures)
 }
 
 func downloadImages(avatars []string, pictures *[]PictureData) error {

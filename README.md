@@ -5,6 +5,6 @@
 - [x] drawing can be done concurrently
 - [x] Improve imagemanipulation performance (can't do better)
 - [x] Refactor
-- [ ] Add support to run as a http service
-- [ ] Deploy
+- [x] Add support to run as a http service
+- [x] Deploy
 - [ ] Support parameters for: Grayscale/Color and Image width size
