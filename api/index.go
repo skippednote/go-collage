@@ -2,6 +2,7 @@ package handler
 
 import (
 	"bytes"
+	"fmt"
 	"image/jpeg"
 	"net/http"
 
@@ -11,11 +12,10 @@ import (
 )
 
 func Handler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.Method)
 	query := r.URL.Query()
 	gray := query.Get("gray")
 	width := query.Get("width")
-	url := query.Get("url")
-	images := query.Get("images")
 
 	// pictures, err := download.GetPictures("https://www.axelerant.com/about", `<div class="emp-avatar">\s+<img src="(.+jpg)\?.+" width="300"`)
 	pictures, err := download.GetPictures("https://www.axelerant.com/about", `<div class="emp-avatar">\s+<img src="(.+jpg)\?.+" width="300"`)
