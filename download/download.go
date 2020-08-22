@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -49,13 +50,12 @@ func getPictureURLs(regex string, html []byte) ([]string, error) {
 	return pictureURLs, nil
 }
 
-func downloadImage(image string, pictures *[]PictureData, wg *sync.WaitGroup) {
+func downloadImage(baseURL string, image string, pictures *[]PictureData, wg *sync.WaitGroup) {
 	defer wg.Done()
 	s := strings.Split(image, "/")
 	filename := strings.ToLower(s[len(s)-1])
 	path := filepath.Join(".", "avatars", filename)
 
-	baseURL := "https://www.axelerant.com"
 	res, err := http.Get(baseURL + image)
 	if err != nil {
 		log.Printf("Failed to fetch the image. %s", err.Error())
@@ -74,19 +74,25 @@ func downloadImage(image string, pictures *[]PictureData, wg *sync.WaitGroup) {
 	})
 }
 
-func downloadImages(avatars []string, pictures *[]PictureData) error {
+func downloadImages(baseURL string, avatars []string, pictures *[]PictureData) error {
 	var wg sync.WaitGroup
 	for _, image := range avatars {
 		wg.Add(1)
-		go downloadImage(image, pictures, &wg)
+		go downloadImage(baseURL, image, pictures, &wg)
 	}
 	wg.Wait()
 	return nil
 }
 
-func GetPictures(url string, regex string) ([]PictureData, error) {
+func GetPictures(uri string, regex string) ([]PictureData, error) {
+	u, err := url.Parse(uri)
+	if err != nil {
+		return nil, err
+	}
+	baseURL := u.Scheme + u.Hostname()
+
 	var pictures []PictureData
-	html, err := getHTML(url)
+	html, err := getHTML(uri)
 	if err != nil {
 		return nil, err
 	}
@@ -96,7 +102,7 @@ func GetPictures(url string, regex string) ([]PictureData, error) {
 		return nil, err
 	}
 
-	err = downloadImages(pictureURLs, &pictures)
+	err = downloadImages(baseURL, pictureURLs, &pictures)
 	if err != nil {
 		return nil, err
 	}

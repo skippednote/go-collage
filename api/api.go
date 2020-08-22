@@ -36,7 +36,6 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// pictures, err := download.GetPictures("https://www.axelerant.com/about", `<div class="emp-avatar">\s+<img src="(.+jpg)\?.+" width="300"`)
 	pictures, err := download.GetPictures(form.Uri, form.Regex)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
