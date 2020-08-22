@@ -14,6 +14,8 @@ import (
 type Form struct {
 	Uri   string `json:"uri"`
 	Regex string `json:"regex"`
+	Gray  string `json:"gray"`
+	Width string `json:"width"`
 }
 
 func Handler(w http.ResponseWriter, r *http.Request) {
@@ -30,10 +32,6 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	query := r.URL.Query()
-	gray := query.Get("gray")
-	width := query.Get("width")
-
 	// pictures, err := download.GetPictures("https://www.axelerant.com/about", `<div class="emp-avatar">\s+<img src="(.+jpg)\?.+" width="300"`)
 	pictures, err := download.GetPictures(form.Uri, form.Regex)
 	if err != nil {
@@ -42,7 +40,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	collage := drawimage.Drawimage(pictures)
-	manipulatedCollage, err := imagemanipulation.Manipulate(collage, gray, width)
+	manipulatedCollage, err := imagemanipulation.Manipulate(collage, form.Gray, form.Width)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

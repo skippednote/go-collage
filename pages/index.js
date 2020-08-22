@@ -5,9 +5,11 @@ const Home = () => {
 
   const submit = async (e) => {
     e.preventDefault();
-    let [uri, regex] = e.currentTarget.elements;
+    let [uri, regex, width, gray] = e.currentTarget.elements;
     uri = uri.value;
     regex = regex.value.replace(/\\/, "\\\\");
+    width = width.value;
+    gray = gray.value;
 
     try {
       const response = await fetch("/api/", {
@@ -15,6 +17,8 @@ const Home = () => {
         body: JSON.stringify({
           uri,
           regex,
+          width,
+          gray,
         }),
       });
       const collageBlob = await response.blob();
@@ -31,6 +35,8 @@ const Home = () => {
       <form onSubmit={submit}>
         <input placeholder="url" />
         <input placeholder="image regex" />
+        <input placeholder="width" />
+        <input placeholder="gray?" type="checkbox" />
         <button type="submit">Submit</button>
       </form>
       {src && (

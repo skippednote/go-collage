@@ -19,6 +19,8 @@ import (
 type Form struct {
 	Uri   string `json:"uri"`
 	Regex string `json:"regex"`
+	Gray  string `json:"gray"`
+	Width string `json:"width"`
 }
 
 func main() {
@@ -37,16 +39,13 @@ func main() {
 			return
 		}
 
-		query := r.URL.Query()
-		gray := query.Get("gray")
-		width := query.Get("width")
 		// pictures, err := download.GetPictures("https://www.axelerant.com/about", `<div class="emp-avatar">\s+<img src="(.+jpg)\?.+" width="300"`)
 		pictures, err := download.GetPictures(form.Uri, form.Regex)
 		if err != nil {
 			fmt.Println("Failed to download", err)
 		}
 		collage := drawimage.Drawimage(pictures)
-		manipulatedCollage, err := imagemanipulation.Manipulate(collage, gray, width)
+		manipulatedCollage, err := imagemanipulation.Manipulate(collage, form.Gray, form.Width)
 		buf := &bytes.Buffer{}
 		jpeg.Encode(buf, manipulatedCollage, nil)
 		w.Header().Set("Accept", "image/jpeg")
