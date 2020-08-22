@@ -10,12 +10,7 @@ import (
 )
 
 func drawChunk(x, y *int32, collage *image.RGBA, data image.Image, wg *sync.WaitGroup) {
-	if *x == 23 {
-		atomic.SwapInt32(x, 0)
-		atomic.AddInt32(y, 1)
-	} else {
-		atomic.AddInt32(x, 1)
-	}
+	defer wg.Done()
 	imgRect := image.Rectangle{
 		Min: image.Point{
 			X: int(*x * 300),
@@ -27,7 +22,12 @@ func drawChunk(x, y *int32, collage *image.RGBA, data image.Image, wg *sync.Wait
 		},
 	}
 	draw.Draw(collage, imgRect, data, image.Point{0, 0}, draw.Src)
-	wg.Done()
+	if *x == 23 {
+		atomic.SwapInt32(x, 0)
+		atomic.AddInt32(y, 1)
+	} else {
+		atomic.AddInt32(x, 1)
+	}
 }
 
 func Drawimage(pictures []download.PictureData) *image.RGBA {
@@ -51,11 +51,11 @@ func Drawimage(pictures []download.PictureData) *image.RGBA {
 	collage := image.NewRGBA(collageRect)
 
 	var wg sync.WaitGroup
-	var x int32 = -1
+	var x int32 = 0
 	var y int32 = 0
 	for _, picture := range pictures {
 		wg.Add(1)
-		go drawChunk(&x, &y, collage, picture.Data, &wg)
+		drawChunk(&x, &y, collage, picture.Data, &wg)
 	}
 
 	return collage
