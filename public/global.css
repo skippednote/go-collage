@@ -12,6 +12,14 @@ body {
   font-size: 18px;
 }
 
+img {
+  max-width: 100%;
+}
+
+hr {
+  margin: 3rem 0;
+}
+
 ::placeholder {
   font-family: "VT323", monospace;
   font-size: 1.5rem;

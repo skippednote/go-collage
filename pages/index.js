@@ -34,7 +34,7 @@ const Home = () => {
   const axelerant = () => {
     const [url, regex] = Array.from(formEl.current.querySelectorAll("input"));
     url.value = "https://www.axelerant.com/about";
-    regex.value = `<div class="emp-avatar">\s+<img src="(.+jpg)\?.+" width="300"`;
+    regex.value = `<div class="emp-avatar">\\s+<img src="(.+jpg)\\?.+" width="300"`;
   };
 
   return (
