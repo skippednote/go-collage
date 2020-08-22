@@ -72,7 +72,12 @@ const Home = () => {
           <hr />
           <div style={{ textAlign: "center" }}>
             {loading && <h3>Loading...</h3>}
-            <a href={src} download="collage.jpg" className="btn">
+            <a
+              href={src}
+              style={{ fontSize: "2.5rem" }}
+              download="collage.jpg"
+              className="btn"
+            >
               DOWNLOAD
             </a>
             <br />
