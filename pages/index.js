@@ -68,25 +68,23 @@ const Home = () => {
       <button className="btn try" onClick={axelerant}>
         Try Axelerant Banner?
       </button>
-      {src && (
-        <>
-          <hr />
-          <div style={{ textAlign: "center" }}>
-            {loading && <h3>Loading...</h3>}
+      <div style={{ textAlign: "center" }}>
+        {loading && <h3>Loading...</h3>}
+        {src && (
+          <>
+            <hr />
             <a
               href={src}
-              style={{ fontSize: "2.5rem" }}
+              style={{ fontSize: "2.5rem", marginBottom: "2rem" }}
               download="collage.jpg"
               className="btn"
             >
               DOWNLOAD
             </a>
-            <br />
-            <br />
             <img src={src} />
-          </div>
-        </>
-      )}
+          </>
+        )}
+      </div>
     </main>
   );
 };
