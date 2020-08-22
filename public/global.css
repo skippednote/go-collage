@@ -14,7 +14,7 @@ body {
 
 ::placeholder {
   font-family: "VT323", monospace;
-  font-size: 1rem;
+  font-size: 1.5rem;
   color: white;
 }
 
@@ -132,7 +132,7 @@ input {
   line-height: 50px;
   height: 50px;
   font-family: "VT323", monospace;
-  font-size: 1rem;
+  font-size: 1.5rem;
   padding: 0.5rem;
   display: block;
   width: 80%;
@@ -142,11 +142,6 @@ input {
 .try {
   margin: auto;
   display: block;
-}
-
-.form .btn,
-.form .input {
-  color: black;
 }
 
 .fields,

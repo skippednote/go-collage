@@ -21,8 +21,13 @@
   - `image=<div class="emp-avatar">\s+<img src="(.+jpg)\?.+" width="300`
 
 ## Screenshots
+##### Web UI
+![](./screenshots/0.png)
+##### Default Settings: Colored and 1920px wide image
 ![](./screenshots/1.png)
+##### Resize image
 ![](./screenshots/2.png)
+##### Grayscale image
 ![](./screenshots/3.png)
 
 ### Info
