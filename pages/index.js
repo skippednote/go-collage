@@ -69,7 +69,12 @@ const Home = () => {
         Try Axelerant Banner?
       </button>
       <div style={{ textAlign: "center" }}>
-        {loading && <h3>Loading...</h3>}
+        {loading && (
+          <>
+            <hr />
+            <h3>Loading...</h3>
+          </>
+        )}
         {src && (
           <>
             <hr />
