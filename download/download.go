@@ -34,7 +34,7 @@ func getHTML(url string) ([]byte, error) {
 }
 
 func getPictureURLs(regex string, html []byte) ([]string, error) {
-	var re, err = regexp.Compile(regex)
+	re, err := regexp.Compile(regex)
 	if err != nil {
 		return nil, fmt.Errorf("Failed to compile the given regexp. %s", err.Error())
 	}

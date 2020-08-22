@@ -1,10 +1,33 @@
-### Todos
-- [x] Keep images in memory
-- [x] Return errors from each package
-- [x] Download takes in a regexp and a url
-- [x] drawing can be done concurrently
-- [x] Improve imagemanipulation performance (can't do better)
-- [x] Refactor
-- [x] Add support to run as a http service
-- [x] Deploy
-- [ ] Support parameters for: Grayscale/Color and Image width size
+# GoCollage
+> Generate collage using Go
+
+## Setup
+- Clone the repository
+- run go get
+- run `go run main.go`
+
+## Deploy
+- To deploy connect the repository with [Vercel](https://vercel.app).
+
+
+## Usage
+- By default the image is of width 1920px and colored. However to change the
+  width and color you can pass the following query parameters:
+  - `gray=true` to convert to the image to grayscale.
+  - `width=900` to resize the width to 900px. The height will automatically
+    maintain the aspect ratio.
+- Base URL and the image on the page can be configurable using query parameters.
+  - `url=https://www.axelerant.com`
+  - `image=<div class="emp-avatar">\s+<img src="(.+jpg)\?.+" width="300`
+
+## Screenshots
+![](./screenshots/1.png)
+![](./screenshots/2.png)
+![](./screenshots/3.png)
+
+### Info
+
+- [Twitch](https://www.twitch.tv/skippednote)
+- [Twitter](https://www.twitter.com/skippednote)
+- [GitHub](https://www.github.com/skippednote)
+
