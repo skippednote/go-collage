@@ -23,7 +23,7 @@ hr {
 ::placeholder {
   font-family: "VT323", monospace;
   font-size: 1.5rem;
-  color: white;
+  color: #ccc;
 }
 
 audio {

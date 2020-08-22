@@ -75,7 +75,11 @@ const Home = () => {
             <hr />
             <a
               href={src}
-              style={{ fontSize: "2.5rem", marginBottom: "2rem" }}
+              style={{
+                fontSize: "2.5rem",
+                marginBottom: "2rem",
+                display: "inline-block",
+              }}
               download="collage.jpg"
               className="btn"
             >
