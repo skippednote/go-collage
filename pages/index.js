@@ -5,7 +5,7 @@ const Home = () => {
     uri = uri.value;
     regex = regex.value.replace(/\\/, "\\\\");
 
-    fetch("http://localhost:8080/", {
+    fetch("/api/", {
       method: "POST",
       body: JSON.stringify({
         uri,
