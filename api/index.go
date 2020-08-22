@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"github.com/skippednote/collage/route"
+	"github.com/skippednote/go-collage/route"
 )
 
 var Handler = route.Handler

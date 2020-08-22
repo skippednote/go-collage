@@ -6,7 +6,7 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/skippednote/collage/download"
+	"github.com/skippednote/go-collage/download"
 )
 
 func drawChunk(x, y *int32, collage *image.RGBA, data image.Image, wg *sync.WaitGroup) {

@@ -6,9 +6,9 @@ import (
 	"image/jpeg"
 	"net/http"
 
-	"github.com/skippednote/collage/download"
-	"github.com/skippednote/collage/drawimage"
-	"github.com/skippednote/collage/imagemanipulation"
+	"github.com/skippednote/go-collage/download"
+	"github.com/skippednote/go-collage/drawimage"
+	"github.com/skippednote/go-collage/imagemanipulation"
 )
 
 type Form struct {

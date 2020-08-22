@@ -1,4 +1,4 @@
-module github.com/skippednote/collage
+module github.com/skippednote/go-collage
 
 go 1.14
 
