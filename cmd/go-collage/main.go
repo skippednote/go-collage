@@ -3,13 +3,11 @@ package main
 import (
 	"net/http"
 
-	"github.com/skippednote/go-collage/route"
+	"github.com/skippednote/go-collage/api"
 )
-
-var Handler = route.Handler
 
 func main() {
 	// defer profile.Start().Stop()
-	http.HandleFunc("/", Handler)
+	http.HandleFunc("/", api.Handler)
 	http.ListenAndServe(":8080", nil)
 }
