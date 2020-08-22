@@ -66,6 +66,11 @@ const Home = () => {
       {src && (
         <>
           <hr />
+          <a href={src} download="collage.jpg" className="btn">
+            DOWNLOAD
+          </a>
+          <br />
+          <br />
           <img src={src} />
         </>
       )}
