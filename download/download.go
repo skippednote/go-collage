@@ -54,7 +54,11 @@ func downloadImage(baseURL string, image string, pictures *[]PictureData, wg *sy
 	defer wg.Done()
 	name := strings.ToLower(filepath.Base(image))
 
-	res, err := http.Get(baseURL + image)
+	if strings.HasPrefix(image, "/") {
+		image = baseURL + image
+	}
+
+	res, err := http.Get(image)
 	if err != nil {
 		log.Printf("Failed to fetch the image. %s", err.Error())
 	}
