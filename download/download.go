@@ -18,8 +18,6 @@ type PictureData struct {
 	Data image.Image
 }
 
-var pictures []PictureData
-
 func getHTML(url string) ([]byte, error) {
 	res, err := http.Get(url)
 	if err != nil {
@@ -51,7 +49,7 @@ func getPictureURLs(regex string, html []byte) ([]string, error) {
 	return pictureURLs, nil
 }
 
-func downloadImage(image string, wg *sync.WaitGroup) {
+func downloadImage(image string, pictures *[]PictureData, wg *sync.WaitGroup) {
 	defer wg.Done()
 	s := strings.Split(image, "/")
 	filename := strings.ToLower(s[len(s)-1])
@@ -70,23 +68,25 @@ func downloadImage(image string, wg *sync.WaitGroup) {
 	}
 
 	log.Printf("Downloading the file: %s", filename)
-	pictures = append(pictures, PictureData{
+	*pictures = append(*pictures, PictureData{
 		Path: path,
 		Data: img,
 	})
+	fmt.Println(pictures)
 }
 
-func downloadImages(avatars []string) error {
+func downloadImages(avatars []string, pictures *[]PictureData) error {
 	var wg sync.WaitGroup
 	for _, image := range avatars {
 		wg.Add(1)
-		go downloadImage(image, &wg)
+		go downloadImage(image, pictures, &wg)
 	}
 	wg.Wait()
 	return nil
 }
 
 func GetPictures(url string, regex string) ([]PictureData, error) {
+	var pictures []PictureData
 	html, err := getHTML(url)
 	if err != nil {
 		return nil, err
@@ -97,7 +97,7 @@ func GetPictures(url string, regex string) ([]PictureData, error) {
 		return nil, err
 	}
 
-	err = downloadImages(pictureURLs)
+	err = downloadImages(pictureURLs, &pictures)
 	if err != nil {
 		return nil, err
 	}
