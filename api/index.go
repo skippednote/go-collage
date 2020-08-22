@@ -2,7 +2,7 @@ package handler
 
 import (
 	"bytes"
-	"fmt"
+	"encoding/json"
 	"image/jpeg"
 	"net/http"
 
@@ -11,14 +11,31 @@ import (
 	"github.com/skippednote/collage/imagemanipulation"
 )
 
+type Form struct {
+	Uri   string `json:"uri"`
+	Regex string `json:"regex"`
+}
+
 func Handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(r.Method)
+	if r.Method != "POST" {
+		http.Error(w, "Only POST request is supported", http.StatusInternalServerError)
+		return
+	}
+	defer r.Body.Close()
+
+	form := &Form{}
+	err := json.NewDecoder(r.Body).Decode(form)
+	if err != nil {
+		http.Error(w, "Failed to decode the request body", http.StatusInternalServerError)
+		return
+	}
+
 	query := r.URL.Query()
 	gray := query.Get("gray")
 	width := query.Get("width")
 
 	// pictures, err := download.GetPictures("https://www.axelerant.com/about", `<div class="emp-avatar">\s+<img src="(.+jpg)\?.+" width="300"`)
-	pictures, err := download.GetPictures("https://www.axelerant.com/about", `<div class="emp-avatar">\s+<img src="(.+jpg)\?.+" width="300"`)
+	pictures, err := download.GetPictures(form.Uri, form.Regex)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
