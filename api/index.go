@@ -22,6 +22,6 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	jpeg.Encode(buf, manipulatedCollage, nil)
 	pictures = nil
 
-	w.Header().Add("cache-control", "max-age=3600, public")
+	// w.Header().Add("cache-control", "max-age=3600, public")
 	w.Write(buf.Bytes())
 }
