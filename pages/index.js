@@ -15,6 +15,7 @@ const Home = () => {
     gray = gray.checked;
 
     try {
+      setSrc(null);
       setLoading(true);
       const response = await fetch("/api/api", {
         method: "POST",
