@@ -7,12 +7,13 @@ const Home = () => {
     e.preventDefault();
     let [uri, regex, width, gray] = e.currentTarget.elements;
     uri = uri.value;
-    regex = regex.value.replace(/\\/, "\\\\");
+    // regex = regex.value.replace(/\\/, "\\\\");
+    regex = regex.value;
     width = width.value;
-    gray = gray.value;
+    gray = gray.checked;
 
     try {
-      const response = await fetch("/api/", {
+      const response = await fetch("http://localhost:8080", {
         method: "POST",
         body: JSON.stringify({
           uri,
@@ -33,10 +34,10 @@ const Home = () => {
       <h1>Home</h1>
       {err && <h4>{err}</h4>}
       <form onSubmit={submit}>
-        <input placeholder="url" />
-        <input placeholder="image regex" />
-        <input placeholder="width" />
-        <input placeholder="gray?" type="checkbox" />
+        <input name="url" placeholder="url" />
+        <input name="regex" placeholder="image regex" />
+        <input name="width" placeholder="width" />
+        <input name="checkbox" placeholder="gray?" type="checkbox" />
         <button type="submit">Submit</button>
       </form>
       {src && (

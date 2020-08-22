@@ -8,7 +8,7 @@ import (
 	"github.com/nfnt/resize"
 )
 
-func Manipulate(collage *image.RGBA, gray, width string) (image.Image, error) {
+func Manipulate(collage *image.RGBA, gray bool, width string) (image.Image, error) {
 	resizedCollage := resize.Thumbnail(1920, 1080, collage, resize.Lanczos3)
 	if len(width) > 0 {
 		width, err := strconv.ParseUint(width, 10, 32)
@@ -18,7 +18,7 @@ func Manipulate(collage *image.RGBA, gray, width string) (image.Image, error) {
 		resizedCollage = resize.Thumbnail(uint(width), 1080, collage, resize.Lanczos3)
 	}
 
-	if len(gray) > 0 {
+	if gray {
 		bounds := resizedCollage.Bounds()
 		grayCollage := image.NewGray(bounds)
 
