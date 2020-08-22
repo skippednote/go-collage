@@ -1,7 +1,7 @@
 {
   "scripts": {
     "dev": "next dev",
-    "build": "next"
+    "build": "next build"
   },
   "devDependencies": {
     "next": "^9.5.2",
