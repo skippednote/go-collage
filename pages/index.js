@@ -10,16 +10,17 @@ const Home = () => {
     regex = regex.value.replace(/\\/, "\\\\");
 
     try {
-      const collageBlob = await fetch("/api/", {
+      const response = await fetch("/api/", {
         method: "POST",
         body: JSON.stringify({
           uri,
           regex,
         }),
-      }).then((r) => r.blob());
+      });
+      const collageBlob = await response.blob();
       setSrc(URL.createObjectURL(collageBlob));
     } catch (e) {
-      setErr(e.message);
+      setErr("Failed to load the image");
       console.log(e);
     }
   };
