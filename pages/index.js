@@ -3,6 +3,7 @@ import { useState, useRef } from "react";
 const Home = () => {
   const [src, setSrc] = useState();
   const [err, setErr] = useState();
+  const [loading, setLoading] = useState();
   const formEl = useRef(null);
 
   const submit = async (e) => {
@@ -14,6 +15,7 @@ const Home = () => {
     gray = gray.checked;
 
     try {
+      setLoading(true);
       const response = await fetch("/api/api", {
         method: "POST",
         body: JSON.stringify({
@@ -25,9 +27,11 @@ const Home = () => {
       });
       const collageBlob = await response.blob();
       setSrc(URL.createObjectURL(collageBlob));
+      setLoading(false);
     } catch (e) {
       setErr("Failed to load the image");
       console.log(e);
+      setLoading(false);
     }
   };
 
@@ -55,7 +59,7 @@ const Home = () => {
             type="checkbox"
           />
           <label htmlFor="gray"></label>
-          <button className="btn" type="submit">
+          <button className="btn" type="submit" disabled={loading}>
             Submit
           </button>
         </div>
@@ -66,12 +70,15 @@ const Home = () => {
       {src && (
         <>
           <hr />
-          <a href={src} download="collage.jpg" className="btn">
-            DOWNLOAD
-          </a>
-          <br />
-          <br />
-          <img src={src} />
+          <div style={{ textAlign: "center" }}>
+            {loading && <h3>Loading...</h3>}
+            <a href={src} download="collage.jpg" className="btn">
+              DOWNLOAD
+            </a>
+            <br />
+            <br />
+            <img src={src} />
+          </div>
         </>
       )}
     </main>
