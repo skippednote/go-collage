@@ -13,7 +13,7 @@ const Home = () => {
     gray = gray.checked;
 
     try {
-      const response = await fetch("http://localhost:8080", {
+      const response = await fetch("/api", {
         method: "POST",
         body: JSON.stringify({
           uri,
