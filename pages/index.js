@@ -13,7 +13,7 @@ const Home = () => {
     gray = gray.checked;
 
     try {
-      const response = await fetch("/api", {
+      const response = await fetch("/api/api", {
         method: "POST",
         body: JSON.stringify({
           uri,
