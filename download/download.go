@@ -15,7 +15,7 @@ import (
 )
 
 type PictureData struct {
-	Path string
+	Name string
 	Data image.Image
 }
 
@@ -52,9 +52,7 @@ func getPictureURLs(regex string, html []byte) ([]string, error) {
 
 func downloadImage(baseURL string, image string, pictures *[]PictureData, wg *sync.WaitGroup) {
 	defer wg.Done()
-	s := strings.Split(image, "/")
-	filename := strings.ToLower(s[len(s)-1])
-	path := filepath.Join(".", "avatars", filename)
+	name := strings.ToLower(filepath.Base(image))
 
 	res, err := http.Get(baseURL + image)
 	if err != nil {
@@ -69,7 +67,7 @@ func downloadImage(baseURL string, image string, pictures *[]PictureData, wg *sy
 
 	// log.Printf("Downloading the file: %s", filename)
 	*pictures = append(*pictures, PictureData{
-		Path: path,
+		Name: name,
 		Data: img,
 	})
 }
@@ -89,7 +87,10 @@ func GetPictures(uri string, regex string) ([]PictureData, error) {
 	if err != nil {
 		return nil, err
 	}
-	baseURL := u.Scheme + u.Hostname()
+	baseURL := fmt.Sprintf("%s://%s", u.Scheme, u.Hostname())
+	if err != nil {
+		return nil, err
+	}
 
 	var pictures []PictureData
 	html, err := getHTML(uri)
